@@ -15,6 +15,7 @@
     justify-content: start;
     align-items: center;
     background-color: cadetblue;
+    gap: 1.5rem;
 }
 
 .input-box{
@@ -34,10 +35,31 @@
 
 .output-box{
     color: aliceblue;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
 }
 
-#placeholder-select{
-    color: grey;
+.value-box{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
+}
+.year-box{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    width: 100%;
+    gap: 1.5rem;
 }
 
 option{

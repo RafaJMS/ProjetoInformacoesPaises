@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import axios from 'axios'
 import './App.css'
 
@@ -6,7 +6,18 @@ import './App.css'
 function App() {
   const [type, setType] = useState();
   const [country, setCountry] = useState();
+  const [countryDesc,setCountryDesc] = useState()
   const [countryData,setCountryData] = useState()
+  const [countryName, setCountryName] = useState()
+  const [countryValue0,setCountryValue0] = useState()
+  const [countryValue1,setCountryValue1] = useState()
+  const [countryValue2,setCountryValue2] = useState()
+  const [countryUnity,setcountryUnity] = useState()
+  const [countrySymbol,setcountrySymbol] = useState()
+  const [flagData,setflagData] = useState()
+  const [error,setError] = useState()
+
+  
 
   function keyPress(event) {
     if (event.key === 'Enter') {
@@ -15,22 +26,64 @@ function App() {
     }
   }
 
-  function buttonClick(){
-    flagSearch()
-    countrySearch()
-  }
-
   async function flagSearch(){  
     let lowercasecountry = country.toLowerCase();
-    const flagData = await axios.get(`https://flagcdn.com/256x192/${lowercasecountry}.png`)
-    return flagData
+    let response = await axios.get(`https://flagcdn.com/256x192/${lowercasecountry}.png`)
+    setflagData(response.config.url)
+    console.log(flagData)
   }
   
-  async function countrySearch(){
-    setCountryData(await axios.get(`https://servicodados.ibge.gov.br/api/v1/paises/${country}/indicadores/${type}`))
-    console.log(countryData.data[0].series[0].serie)
+  async function countrySearch(){  
+
+    let responseData = await axios.get(`https://servicodados.ibge.gov.br/api/v1/paises/${country}/indicadores/${type}?periodo=2018,2019,2020`)
+    let responseDesc = await axios.get(`https://servicodados.ibge.gov.br/api/v1/paises/${country}`)
+    console.log(responseData)
+    if(responseData && responseDesc){
+      setCountryData(responseData)
+      setCountryDesc(responseDesc)
+    }
+    
+
   }
-  
+
+  useEffect(() => {
+    if(countryData) {
+      if(countryData.data[0].series[0] != undefined){
+        flagSearch()
+        
+        setCountryName(countryData.data[0].series[0].pais.nome)
+        setCountryValue0(parseFloat(countryData.data[0].series[0].serie[0]["2018"]).toFixed(2))
+        setCountryValue1(countryData.data[0].series[0].serie[1]["2019"])
+        setCountryValue2(countryData.data[0].series[0].serie[2]["2020"])
+        console.log(countryData)
+        console.log(countryData.data[0])
+
+        setError(undefined)
+
+        if(countryData.data[0].unidade != undefined){
+
+          setcountryUnity(countryData.data[0].unidade.id)
+        
+        }else{
+
+          setcountryUnity('%')
+        }
+
+      }else{
+        flagSearch()
+        setCountryName('Afeganistão')
+        setError('Essa combinação apresenta um erro, tente outra!')
+        setCountryValue0('-')
+        setCountryValue1('-')
+        setCountryValue2('-')
+
+      }
+    
+    }
+  }, [countryData])
+
+
+
   return (
     <>
       <div className='major-box' >
@@ -287,14 +340,47 @@ function App() {
 
         </div>
         <div className='button-box'>
-          <button type="button" onClick={buttonClick} className="btn btn-outline-info">Info</button>
+          <button type="button" onClick={countrySearch} className="btn btn-outline-info">Info</button>
         </div>
       </div>
-        
-        <div className='output-box'>
-          
-            {countryData ? <div>a</div>:<div>n</div>}
-        </div>    
+      <div className='output-box'>
+            {countryData ? 
+            <>
+                <span id='country-name'>{countryName && `${countryName} (${country})`}</span>
+              
+              <div className='flag-box'>
+              
+                <img src={flagData} alt=""/>
+              
+              </div>
+            
+            <span id='error'>{error&&`${error}`}</span>
+            
+            <div className='value-box'>
+              
+              <div className='year-box'>
+                <span className='years'>2018</span>
+                <span id='data-value'>{countryValue0 && `${countryValue0} ${countryUnity}`}</span>
+              </div>
+                
+              <div className='year-box'>
+                <span className='years'>2019</span>
+                <span id='data-value'>{countryValue1 && `${countryValue1} ${countryUnity}`}</span>
+              </div>
+                
+                
+              
+              <div className='year-box'>
+              
+              <span className='years'>2020</span>
+              <span id='data-value'>{countryValue2 && `${countryValue2} ${countryUnity}`}</span>
+              
+              </div>
+            </div>
+
+            </>
+            :<div></div>}
+          </div>
         </div>
       </div>
       
