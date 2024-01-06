@@ -13,7 +13,6 @@ function App() {
   const [countryValue1,setCountryValue1] = useState()
   const [countryValue2,setCountryValue2] = useState()
   const [countryUnity,setcountryUnity] = useState()
-  const [countrySymbol,setcountrySymbol] = useState()
   const [flagData,setflagData] = useState()
   const [error,setError] = useState()
 
@@ -25,6 +24,11 @@ function App() {
       countrySearch();
     }
   }
+  async function declareName(){
+    let response = await axios.get(`https://restcountries.com/v3.1/alpha/${country}?lang=pt`)
+    console.log(response)
+    setCountryName(response.data[0].translations['por']['common'])
+  }
 
   async function flagSearch(){  
     let lowercasecountry = country.toLowerCase();
@@ -35,50 +39,76 @@ function App() {
   
   async function countrySearch(){  
 
-    let responseData = await axios.get(`https://servicodados.ibge.gov.br/api/v1/paises/${country}/indicadores/${type}?periodo=2018,2019,2020`)
-    let responseDesc = await axios.get(`https://servicodados.ibge.gov.br/api/v1/paises/${country}`)
-    console.log(responseData)
-    if(responseData && responseDesc){
+      let responseData = await axios.get(`https://servicodados.ibge.gov.br/api/v1/paises/${country}/indicadores/${type}?periodo=2018,2019,2020`)
+      let responseDesc = await axios.get(`https://servicodados.ibge.gov.br/api/v1/paises/${country}`)
+      console.log(responseData)
       setCountryData(responseData)
       setCountryDesc(responseDesc)
-    }
-    
-
+      
   }
 
   useEffect(() => {
+    flagSearch()
+    declareName()
     if(countryData) {
-      if(countryData.data[0].series[0] != undefined){
-        flagSearch()
+      if (countryData.data[0] != undefined){
+
+        console.log('Passou no primeiro if')
         
-        setCountryName(countryData.data[0].series[0].pais.nome)
-        setCountryValue0(parseFloat(countryData.data[0].series[0].serie[0]["2018"]).toFixed(2))
-        setCountryValue1(countryData.data[0].series[0].serie[1]["2019"])
-        setCountryValue2(countryData.data[0].series[0].serie[2]["2020"])
-        console.log(countryData)
-        console.log(countryData.data[0])
-
-        setError(undefined)
-
-        if(countryData.data[0].unidade != undefined){
-
-          setcountryUnity(countryData.data[0].unidade.id)
+        if(countryData.data[0].series[0] != undefined){
         
+          console.log('Passou no segundo if')
+          
+          if(countryData.data[0].series[0].serie[0]["2018"] !=undefined){
+            setCountryValue0(countryData.data[0].series[0].serie[0]["2018"])
+          }else{
+            setCountryValue0('-')
+            setcountryUnity('')
+          }
+
+          if(countryData.data[0].series[0].serie[1]["2019"] !=undefined){
+            setCountryValue1(countryData.data[0].series[0].serie[1]["2019"])
+          }else{
+            setCountryValue1('-')
+            setcountryUnity('')
+          }
+          
+          if(countryData.data[0].series[0].serie[2]["2020"] !=undefined){
+            setCountryValue2(countryData.data[0].series[0].serie[2]["2020"])
+          }else{
+            setCountryValue2('-')
+            setcountryUnity('')
+          }
+  
+          setError(undefined)
+  
+          if(countryData.data[0].unidade != undefined){
+  
+            setcountryUnity(countryData.data[0].unidade.id)
+          
+          }else{
+  
+            setcountryUnity('%')
+          }
+  
         }else{
-
-          setcountryUnity('%')
+          setError('Essa combinação apresenta um erro, tente outra!')
+          setCountryValue0('-')
+          setCountryValue1('-')
+          setCountryValue2('-')
+          setcountryUnity('')
+  
         }
-
+      
       }else{
-        flagSearch()
-        setCountryName('Afeganistão')
         setError('Essa combinação apresenta um erro, tente outra!')
         setCountryValue0('-')
-        setCountryValue1('-')
-        setCountryValue2('-')
-
+          setCountryValue1('-')
+          setCountryValue2('-')
+          setcountryUnity('')
+  
       }
-    
+      
     }
   }, [countryData])
 
@@ -88,6 +118,7 @@ function App() {
     <>
       <div className='major-box' >
         <div className='container'>
+          <h2> PESQUISA ONU</h2>
       <div className='input-box input-group gap-3' > 
         <div className='input-group grid gap-0 row-gap-3 country-type-box' >  
           <div className="input-group  w-100 ">
@@ -340,23 +371,31 @@ function App() {
 
         </div>
         <div className='button-box'>
-          <button type="button" onClick={countrySearch} className="btn btn-outline-info">Info</button>
+          <button type="button" onClick={countrySearch} className="btn btn-outline-light">Buscar</button>
         </div>
       </div>
       <div className='output-box'>
             {countryData ? 
             <>
-                <span id='country-name'>{countryName && `${countryName} (${country})`}</span>
               
-              <div className='flag-box'>
+              <table className="info-box">
+
+                <tr>
+                  <th><span>{onchange = `${countryName} (${country})`}</span></th>
+                </tr>
+
+                <tr>
+                  <td><img src={flagData} alt=""/></td>
+                </tr>
+
+              </table>
               
-                <img src={flagData} alt=""/>
-              
-              </div>
             
             <span id='error'>{error&&`${error}`}</span>
             
             <div className='value-box'>
+
+              <h2></h2>
               
               <div className='year-box'>
                 <span className='years'>2018</span>
@@ -367,18 +406,16 @@ function App() {
                 <span className='years'>2019</span>
                 <span id='data-value'>{countryValue1 && `${countryValue1} ${countryUnity}`}</span>
               </div>
-                
-                
               
               <div className='year-box'>
-              
-              <span className='years'>2020</span>
-              <span id='data-value'>{countryValue2 && `${countryValue2} ${countryUnity}`}</span>
-              
+                <span className='years'>2020</span>
+                <span id='data-value'>{countryValue2 && `${countryValue2} ${countryUnity}`}</span>
               </div>
+            
             </div>
-
+            
             </>
+
             :<div></div>}
           </div>
         </div>
@@ -389,3 +426,6 @@ function App() {
 }
 
 export default App
+
+
+
