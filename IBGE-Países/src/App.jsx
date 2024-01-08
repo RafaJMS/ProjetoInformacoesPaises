@@ -5,6 +5,7 @@ import './App.css'
 
 function App() {
   const [type, setType] = useState();
+  const [typeName, setTypeName] = useState()
   const [country, setCountry] = useState();
   const [countryDesc,setCountryDesc] = useState()
   const [countryData,setCountryData] = useState()
@@ -13,6 +14,9 @@ function App() {
   const [countryValue1,setCountryValue1] = useState()
   const [countryValue2,setCountryValue2] = useState()
   const [countryUnity,setcountryUnity] = useState()
+  const [countryCapital,setCountryCapital] = useState()
+  const [countryContinent,setCountryContinent] = useState()
+  const [countryLanguage,setCountryLanguage] = useState()
   const [flagData,setflagData] = useState()
   const [error,setError] = useState()
 
@@ -24,9 +28,15 @@ function App() {
       countrySearch();
     }
   }
+
+  function clickButton(){
+    declareName();
+    flagSearch();
+    countrySearch();
+  }
+
   async function declareName(){
     let response = await axios.get(`https://restcountries.com/v3.1/alpha/${country}?lang=pt`)
-    console.log(response)
     setCountryName(response.data[0].translations['por']['common'])
   }
 
@@ -34,25 +44,37 @@ function App() {
     let lowercasecountry = country.toLowerCase();
     let response = await axios.get(`https://flagcdn.com/256x192/${lowercasecountry}.png`)
     setflagData(response.config.url)
-    console.log(flagData)
   }
   
   async function countrySearch(){  
 
       let responseData = await axios.get(`https://servicodados.ibge.gov.br/api/v1/paises/${country}/indicadores/${type}?periodo=2018,2019,2020`)
       let responseDesc = await axios.get(`https://servicodados.ibge.gov.br/api/v1/paises/${country}`)
-      console.log(responseData)
       setCountryData(responseData)
-      setCountryDesc(responseDesc)
+      setCountryDesc(responseDesc.data[0].historico)
+      setCountryCapital(responseDesc.data[0].governo.capital.nome)
+      setCountryContinent(responseDesc.data[0].localizacao.regiao.nome)
+      setTypeName(responseData.data[0].indicador)
+      console.log(responseDesc)
+      console.log(typeName)
+      if(responseDesc.data[0].linguas.lenght=1)
+      {
+        let response = responseDesc.data[0].linguas[0].nome
+        setCountryLanguage(response[0].toUpperCase() + response.substring(1))
+        
+
+      }else{
+        console.log("tem mais de uma")
+      }
+      
       
   }
 
   useEffect(() => {
-    flagSearch()
-    declareName()
+    
     if(countryData) {
       if (countryData.data[0] != undefined){
-
+        
         console.log('Passou no primeiro if')
         
         if(countryData.data[0].series[0] != undefined){
@@ -92,36 +114,36 @@ function App() {
           }
   
         }else{
-          setError('Essa combinação apresenta um erro, tente outra!')
+          setError('Aparentemente esse país não apresenta esses dados. Tente dados diferentes!')
           setCountryValue0('-')
           setCountryValue1('-')
           setCountryValue2('-')
-          setcountryUnity('')
+          setcountryUnity('%')
   
         }
       
       }else{
-        setError('Essa combinação apresenta um erro, tente outra!')
+        setError('Aparentemente esse país não apresenta esses dados. Tente dados diferentes!')
         setCountryValue0('-')
-          setCountryValue1('-')
-          setCountryValue2('-')
-          setcountryUnity('')
+        setCountryValue1('-')
+        setCountryValue2('-')
+        setcountryUnity('%')
   
       }
       
     }
   }, [countryData])
 
-
-
   return (
     <>
       <div className='major-box' >
         <div className='container'>
-          <h2> PESQUISA ONU</h2>
+          <h2 className='title'> PESQUISA IBGE - Países da ONU</h2>
+    
       <div className='input-box input-group gap-3' > 
+      <div className='header-box'>
         <div className='input-group grid gap-0 row-gap-3 country-type-box' >  
-          <div className="input-group  w-100 ">
+          <div className="input-group  w-100">
 
             <label label className="input-group-text">Países</label>
             <select onKeyDown={keyPress} onChange={(c => setCountry(c.target.value)) } defaultValue="" className="form-select">
@@ -368,10 +390,12 @@ function App() {
 
           </div>
           
-
+          </div>
+          <img src="src/assets/onusymbol.png" alt="Un Logo White - United Nations Logo White@pngkey.com"/>
         </div>
+
         <div className='button-box'>
-          <button type="button" onClick={countrySearch} className="btn btn-outline-light">Buscar</button>
+          <button type="button" onClick={clickButton} className="btn btn-outline-light">Buscar</button>
         </div>
       </div>
       <div className='output-box'>
@@ -379,41 +403,62 @@ function App() {
             <>
               
               <table className="info-box">
-
+              
                 <tr>
                   <th><span>{onchange = `${countryName} (${country})`}</span></th>
                 </tr>
 
                 <tr>
-                  <td><img src={flagData} alt=""/></td>
+                  <td><img src={flagData} alt={countryName}/></td>
                 </tr>
 
+                <tr>
+                  <td>Nome: {countryName}</td>
+                </tr>
+
+                <tr>
+                  <td>Capital: {countryCapital} </td>
+                </tr>
+
+                <tr>
+                  <td>Lingua: {countryLanguage} </td>
+                </tr>
+
+                <tr>
+                  <td>Continente: {countryContinent} </td>
+                </tr>
+                
               </table>
-              
+
+              <div>
+              <h2 id='descricao'>DESCRIÇÃO DO PAÍS</h2>    
+            <div className='description-box'>
+              <p>{countryDesc && `‎ ‎ ‎ ‎ ${countryDesc}`}</p>
+            </div>
+
+            <h2>INDICADORES DE 2018 A 2020</h2>
             
-            <span id='error'>{error&&`${error}`}</span>
+            <div className='type-box'>
+            <h5>{typeName}</h5>
+            <h5 id='error'>{error?`${error}`:''}</h5>
+            </div>
             
             <div className='value-box'>
 
-              <h2></h2>
-              
               <div className='year-box'>
-                <span className='years'>2018</span>
-                <span id='data-value'>{countryValue0 && `${countryValue0} ${countryUnity}`}</span>
+                <span id='data-value'>{countryValue0 && `2018 -> ${countryValue0} ${countryUnity}`}</span>
               </div>
                 
               <div className='year-box'>
-                <span className='years'>2019</span>
-                <span id='data-value'>{countryValue1 && `${countryValue1} ${countryUnity}`}</span>
+                <span id='data-value'>{countryValue1 && `2019 -> ${countryValue1} ${countryUnity}`}</span>
               </div>
               
               <div className='year-box'>
-                <span className='years'>2020</span>
-                <span id='data-value'>{countryValue2 && `${countryValue2} ${countryUnity}`}</span>
+                <span id='data-value'>{countryValue2 && `2020 -> ${countryValue2} ${countryUnity}`}</span>
               </div>
             
             </div>
-            
+            </div>
             </>
 
             :<div></div>}
