@@ -12,7 +12,6 @@
 }
 
 .container{
-    text-align: center;
     padding: 2rem;
     width: 100%;
     max-width: 90vw;
@@ -26,13 +25,19 @@
     border-radius: 1rem;
 }
 
+.container h2{
+    display: flex;
+    justify-content: center;
+}
+
 .header-box{
     display: flex;
     flex-direction: row;
     width: 100%;
 }
 .header-box img{
-    width: 120px;
+    width: 100%;
+    max-width: 120px;
     margin-left: 3rem;
 }
 
@@ -73,15 +78,13 @@
 }
 
 .description-box{
-    display: flex;
-    text-align: start;
     background-color:  rgb(46, 29, 176);
     margin: 2%;
     margin-top: 0;
     padding: 3%;
-    border: 1px solid whitesmoke;
     border-radius: 0.5rem;
     font-size: 16px;
+    
 }
 
 .info-box{
@@ -99,7 +102,7 @@
 }
 
 .info-box th{
-    width: 19rem;
+    width: 22rem;
     height: 2rem;
     border-bottom: 1px solid whitesmoke;
     text-align: center;
@@ -146,6 +149,7 @@
     border: 1px solid whitesmoke;
     border-radius: 2rem;
     box-sizing: content-box;
+    font-size: 18px;
 }
 .type-box{
     margin: 2%;
@@ -155,7 +159,10 @@
     border: 1px solid white;
     border-radius: 0.5rem;
 }
-
+.type-box h5{
+    font-size: 22px;
+    margin-top: 1rem;
+}
 #error{
     color: rgb(252, 74, 74);
 }

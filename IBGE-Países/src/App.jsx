@@ -17,6 +17,9 @@ function App() {
   const [countryCapital,setCountryCapital] = useState()
   const [countryContinent,setCountryContinent] = useState()
   const [countryLanguage,setCountryLanguage] = useState()
+  const [countryInterRegion,setCountryInterRegion] = useState()
+  const [countrySubregion,setCountrySubregion] = useState()
+  const [moneySymbol, setMoneySymbol] = useState()
   const [flagData,setflagData] = useState()
   const [error,setError] = useState()
 
@@ -50,22 +53,27 @@ function App() {
 
       let responseData = await axios.get(`https://servicodados.ibge.gov.br/api/v1/paises/${country}/indicadores/${type}?periodo=2018,2019,2020`)
       let responseDesc = await axios.get(`https://servicodados.ibge.gov.br/api/v1/paises/${country}`)
+      let response = responseDesc.data[0].linguas[0].nome
+      let subregiao = responseDesc.data[0].localizacao['sub-regiao'].nome
+      let unidmonet = responseDesc.data[0]["unidades-monetarias"][0].nome
+
+      setCountryLanguage(response[0].toUpperCase() + response.substring(1))
       setCountryData(responseData)
       setCountryDesc(responseDesc.data[0].historico)
       setCountryCapital(responseDesc.data[0].governo.capital.nome)
       setCountryContinent(responseDesc.data[0].localizacao.regiao.nome)
       setTypeName(responseData.data[0].indicador)
-      console.log(responseDesc)
-      console.log(typeName)
-      if(responseDesc.data[0].linguas.lenght=1)
-      {
-        let response = responseDesc.data[0].linguas[0].nome
-        setCountryLanguage(response[0].toUpperCase() + response.substring(1))
-        
+      setCountrySubregion(subregiao)
+      setMoneySymbol(unidmonet)
 
+      if(responseDesc.data[0].localizacao['regiao-intermediaria'] != undefined){
+        let regiaointer = responseDesc.data[0].localizacao['regiao-intermediaria'].nome
+          setCountryInterRegion(regiaointer)
       }else{
-        console.log("tem mais de uma")
+        setCountryInterRegion('--')
       }
+      
+     
       
       
   }
@@ -76,8 +84,10 @@ function App() {
       if (countryData.data[0] != undefined){
         
         console.log('Passou no primeiro if')
+        console.log(countryLanguage)
         
-        if(countryData.data[0].series[0] != undefined){
+        if(countryData.data[0].series[0] != undefined)
+        {
         
           console.log('Passou no segundo if')
           
@@ -121,7 +131,6 @@ function App() {
           setcountryUnity('%')
   
         }
-      
       }else{
         setError('Aparentemente esse país não apresenta esses dados. Tente dados diferentes!')
         setCountryValue0('-')
@@ -130,7 +139,6 @@ function App() {
         setcountryUnity('%')
   
       }
-      
     }
   }, [countryData])
 
@@ -426,6 +434,18 @@ function App() {
 
                 <tr>
                   <td>Continente: {countryContinent} </td>
+                </tr>
+
+                <tr>
+                  <td>Região Intermediária: {countryInterRegion} </td>
+                </tr>
+
+                <tr>
+                  <td>Sub-Região: {countrySubregion} </td>
+                </tr>
+
+                <tr>
+                  <td>Unidade Monetária: {moneySymbol} </td>
                 </tr>
                 
               </table>
