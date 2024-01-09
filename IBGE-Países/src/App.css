@@ -125,12 +125,10 @@
     min-width: 15vw;
 }
 
-
-
 .value-box{
     display: flex;
     justify-content: space-around;
-    flex-direction: row;
+    flex-direction: column;
     text-align: center;
     align-items: center;
     gap: 1rem;
@@ -142,7 +140,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    max-width: 16vw;
+    max-width: 20vw;
     gap: 1rem;
     background-color: rgb(46, 29, 176);
     padding: 1rem;
@@ -150,7 +148,12 @@
     border-radius: 2rem;
     box-sizing: content-box;
     font-size: 18px;
+    flex-wrap: wrap;
 }
+.year-box span{
+    width: 100%;
+}
+
 .type-box{
     margin: 2%;
     background-color: rgba(0, 0, 0, 0.532);
@@ -163,6 +166,16 @@
     font-size: 22px;
     margin-top: 1rem;
 }
+
+.type-value-box{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: space-around;
+    text-align: center;
+    
+}
+
 #error{
     color: rgb(252, 74, 74);
 }

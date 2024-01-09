@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react'
 import axios from 'axios'
 import './App.css'
+import Chart from "chart.js/auto"
 
 
 function App() {
@@ -27,15 +28,8 @@ function App() {
 
   function keyPress(event) {
     if (event.key === 'Enter') {
-      flagSearch();
-      countrySearch();
+      clickButton()
     }
-  }
-
-  function clickButton(){
-    declareName();
-    flagSearch();
-    countrySearch();
   }
 
   async function declareName(){
@@ -72,14 +66,35 @@ function App() {
       }else{
         setCountryInterRegion('--')
       }
-      
-     
-      
+
       
   }
 
-  useEffect(() => {
+  async function chartCreation() {
+
+    let chartData = await axios.get(`https://servicodados.ibge.gov.br/api/v1/paises/${country}/indicadores/${type}?periodo=2015,2016,2017,2018,2019,2020`)
+    let charArray = chartData.data[0].series[0].serie
+    var valueYear,years,values,year = 0
+    let data = [];
+
+    for (let i = 0; i < charArray.length; i++) {
+      valueYear = charArray[i];
+      year = 2015+i
+      let dataItem = { ano : year, valor: valueYear[year]}
+      data = [...data, dataItem]
+      years = data.map(row => row.ano)
+      values = data.map(row => row.valor)
+      console.log(years)
+      console.log(values)
+    }
+  
     
+  };
+
+
+
+  useEffect(() => {
+    chartCreation();
     if(countryData) {
       if (countryData.data[0] != undefined){
         
@@ -111,7 +126,7 @@ function App() {
             setCountryValue2('-')
             setcountryUnity('')
           }
-  
+
           setError(undefined)
   
           if(countryData.data[0].unidade != undefined){
@@ -119,7 +134,6 @@ function App() {
             setcountryUnity(countryData.data[0].unidade.id)
           
           }else{
-  
             setcountryUnity('%')
           }
   
@@ -141,6 +155,14 @@ function App() {
       }
     }
   }, [countryData])
+
+  
+  function clickButton(){
+    declareName();
+    flagSearch();
+    countrySearch();
+    
+  }
 
   return (
     <>
@@ -464,7 +486,7 @@ function App() {
             </div>
             
             <div className='value-box'>
-
+            <div className='type-value-box'>
               <div className='year-box'>
                 <span id='data-value'>{countryValue0 && `2018 -> ${countryValue0} ${countryUnity}`}</span>
               </div>
@@ -476,6 +498,11 @@ function App() {
               <div className='year-box'>
                 <span id='data-value'>{countryValue2 && `2020 -> ${countryValue2} ${countryUnity}`}</span>
               </div>
+            </div>
+              <div>
+                <canvas id="typeChart"></canvas>
+              </div>
+              
             
             </div>
             </div>
