@@ -71,14 +71,11 @@ function App() {
   useEffect(() => {
     if(countryData) {
       if (countryData.data[0] != undefined){
-        
-        console.log('Passou no primeiro if')
-        console.log(countryLanguage)
-        
+ 
         if(countryData.data[0].series[0] != undefined)
         {
         
-          console.log('Passou no segundo if')
+      
           
           if(countryData.data[0].series[0].serie[0]["2018"] !=undefined){
             setCountryValue0(countryData.data[0].series[0].serie[0]["2018"])
@@ -103,8 +100,7 @@ function App() {
 
           setError(undefined)
   
-          if(countryData.data[0].unidade != undefined){
-  
+          if(countryData.data[0].unidade != undefined){ 
             setcountryUnity(countryData.data[0].unidade.id)
           
           }else{
