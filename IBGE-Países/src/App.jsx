@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react'
 import axios from 'axios'
 import './App.css'
-import Chart from "chart.js/auto"
 
 
 function App() {
@@ -471,6 +470,16 @@ function App() {
             </>
 
             :<div></div>}
+          </div>
+          <div className='powered-box'>
+          <span hre>POWERED by:</span>
+          <span>||</span>
+          <a href='https://servicodados.ibge.gov.br/api/docs/paises#api-_'>IBGE (API)</a>
+          <span>||</span>
+          <a href='https://restcountries.com/#rest-countries'>REST COUNTRIES (API)</a>
+          <span>||</span>
+          <a href='https://flagpedia.net/download/api'>FLAGS CDN (API)</a>
+          <span>||</span>
           </div>
         </div>
       </div>

@@ -163,6 +163,22 @@
     border-radius: 0.5rem;
 }
 
+.powered-box{
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    color: whitesmoke;
+}
+.powered-box a{
+    color: whitesmoke;
+    
+}
+.powered-box a:hover{
+    color: rgb(143, 208, 230);
+    cursor: pointer;
+}
 #error{
     color: rgb(252, 74, 74);
 }
