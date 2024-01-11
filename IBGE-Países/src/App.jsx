@@ -73,7 +73,11 @@ function App() {
  
         if(countryData.data[0].series[0] != undefined)
         {
-        
+          window.scrollTo({
+            top:1000,
+            left:0,
+            behavior:'smooth'
+          });
       
           
           if(countryData.data[0].series[0].serie[0]["2018"] !=undefined){
@@ -389,7 +393,7 @@ function App() {
           </div>
           
           </div>
-          <img src="src/assets/onusymbol.png" alt="Un Logo White - United Nations Logo White@pngkey.com"/>
+          <a target='blank' href='https://brasil.un.org/pt-br'><img src="src/assets/onusymbol.png" alt="Logo Branco da ONU - Organização das Nações Unidas"/></a>
         </div>
 
         <div className='button-box'>
@@ -474,11 +478,11 @@ function App() {
           <div className='powered-box'>
           <span hre>POWERED by:</span>
           <span>||</span>
-          <a href='https://servicodados.ibge.gov.br/api/docs/paises#api-_'>IBGE (API)</a>
+          <a target='blank' href='https://servicodados.ibge.gov.br/api/docs/paises#api-_'>IBGE (API)</a>
           <span>||</span>
-          <a href='https://restcountries.com/#rest-countries'>REST COUNTRIES (API)</a>
+          <a target='blank' href='https://restcountries.com/#rest-countries'>REST COUNTRIES (API)</a>
           <span>||</span>
-          <a href='https://flagpedia.net/download/api'>FLAGS CDN (API)</a>
+          <a target='blank' href='https://flagpedia.net/download/api'>FLAGS CDN (API)</a>
           <span>||</span>
           </div>
         </div>

@@ -80,7 +80,6 @@
 }
 
 .description-box{
-    display: flex;
     text-align: start;
     background-color:  rgb(46, 29, 176);
     margin: 2%;
