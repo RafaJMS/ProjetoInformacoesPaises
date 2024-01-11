@@ -74,7 +74,7 @@ function App() {
         if(countryData.data[0].series[0] != undefined)
         {
           window.scrollTo({
-            top:1000,
+            top:2000,
             left:0,
             behavior:'smooth'
           });
