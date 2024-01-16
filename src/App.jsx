@@ -393,7 +393,7 @@ function App() {
           </div>
           
           </div>
-          <a target='blank' href='https://brasil.un.org/pt-br'><img src="src/assets/onusymbol.png" alt="Logo Branco da ONU - Organização das Nações Unidas"/></a>
+          <a target='blank' href='https://brasil.un.org/pt-br'><img src="/assets/onusymbol.png" alt="Logo Branco da ONU - Organização das Nações Unidas"/></a>
         </div>
 
         <div className='button-box'>
